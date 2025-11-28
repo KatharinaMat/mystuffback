@@ -1,9 +1,10 @@
 package ee.valiit.mystuffback.infrastructure;
 
-import ee.bcs.bank39back.infrastructure.error.ApiError;
-import ee.bcs.bank39back.infrastructure.exception.DataNotFoundException;
-import ee.bcs.bank39back.infrastructure.exception.ForbiddenException;
-import ee.bcs.bank39back.infrastructure.exception.PrimaryKeyNotFoundException;
+
+import ee.valiit.mystuffback.infrastructure.error.ApiError;
+import ee.valiit.mystuffback.infrastructure.exception.DataNotFoundException;
+import ee.valiit.mystuffback.infrastructure.exception.ForbiddenException;
+import ee.valiit.mystuffback.infrastructure.exception.PrimaryKeyNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;

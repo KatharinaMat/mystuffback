@@ -1,6 +1,7 @@
 INSERT INTO mystuff.role (id, name) VALUES (default, 'admin');
 INSERT INTO mystuff.role (id, name) VALUES (default, 'customer');
 
+
 INSERT INTO mystuff."user" (id, role_id, username, password, email, storage,status) VALUES (default, 1,'admin', '123','admin123','1', 'A');
 INSERT INTO mystuff."user" (id, role_id, username, password, email, storage,status) VALUES (default, 2,'hanna', '321','hanna321','1', 'A');
 INSERT INTO mystuff."user" (id, role_id, username, password, email, storage,status) VALUES (default, 2,'katha', '213','katha213','1', 'A');
