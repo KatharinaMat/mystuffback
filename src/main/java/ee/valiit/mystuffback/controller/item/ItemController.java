@@ -22,5 +22,11 @@ public class ItemController {
         List<ItemBasicInfo> itemBasicInfos = itemService.findItemBy(userId);
         return itemBasicInfos;
     }
+    @GetMapping("/item")
+    @Operation(summary = "Returns all details of a chosen item")
+    public void findItemDetailsBy (@RequestParam Integer itemId) {
+        itemService.findItemDetailsBy(itemId);
+    }
+
 }
 

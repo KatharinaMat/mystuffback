@@ -24,4 +24,7 @@ public class ItemService {
 
     }
 
+    public void findItemDetailsBy(Integer itemId) {
+        ItemDetails itemDetails = getItemDetails(itemDetails);
+    }
 }
