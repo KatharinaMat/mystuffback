@@ -27,7 +27,6 @@ public class LoginController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "403", description = "Username or password incorrect", content = @Content(schema = @Schema(implementation = ApiError.class)))})
-
     public LoginResponse login(@RequestParam String username, @RequestParam String password) {
         return loginService.login(username, password);
     }

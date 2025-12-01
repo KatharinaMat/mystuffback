@@ -5,9 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ItemRepository {
     public interface ItemRepository extends JpaRepository<Item, Integer> {
-        @Query("select i from Item i  where i.user.id = :userId order by i.date, i.name")
-        List<Item> findItemBy (Integer userId);
+        @Query("select i from Item i  where i.user.id = :userId and i.status = 'A' order by i.date, i.name")
+        List<Item> findActiveItemsBy(Integer userId);
     }
-}
+
