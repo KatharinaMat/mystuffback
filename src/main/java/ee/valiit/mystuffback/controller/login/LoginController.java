@@ -1,5 +1,6 @@
-package ee.valiit.mystuffback.controller.login.dto;
+package ee.valiit.mystuffback.controller.login;
 
+import ee.valiit.mystuffback.controller.login.dto.LoginResponse;
 import ee.valiit.mystuffback.infrastructure.error.ApiError;
 import ee.valiit.mystuffback.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
