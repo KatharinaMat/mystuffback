@@ -18,5 +18,5 @@ public class ItemDetails implements Serializable {
     private String model;
     private String comment;
     private String imageData;
-    private String imageQR;
+    private String imageQrLink;
 }
