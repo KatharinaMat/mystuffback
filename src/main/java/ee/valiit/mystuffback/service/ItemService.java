@@ -46,6 +46,6 @@ public class ItemService {
 
     public Item getValidItem(Integer itemId) {
         return itemRepository.findById(itemId)
-                .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId));
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId.toString()));
     }
 }
