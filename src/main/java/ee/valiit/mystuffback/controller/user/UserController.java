@@ -13,10 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    @PostMapping("/new-account")
+    @PostMapping
     @Operation(summary = "New user account creation", description = "all fields are mandatory")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
