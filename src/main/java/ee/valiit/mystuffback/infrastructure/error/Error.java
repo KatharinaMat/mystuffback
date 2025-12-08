@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum Error {
     INCORRECT_CREDENTIALS("Incorrect username or password", 111),
-    USERNAME_UNAVAILABLE("This username already exists", 222);
+    USERNAME_UNAVAILABLE("This username already exists", 222),
+    ITEM_NAME_UNAVAILABLE("This item name already exists", 333);
     private final String message;
     private final Integer errorCode;
 

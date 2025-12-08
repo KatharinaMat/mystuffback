@@ -4,13 +4,16 @@ import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
 import ee.valiit.mystuffback.controller.item.dto.ItemDetails;
 import ee.valiit.mystuffback.infrastructure.error.Error;
 import ee.valiit.mystuffback.infrastructure.exception.DataNotFoundException;
+import ee.valiit.mystuffback.infrastructure.exception.ForbiddenException;
 import ee.valiit.mystuffback.infrastructure.exception.PrimaryKeyNotFoundException;
 import ee.valiit.mystuffback.infrastructure.util.BytesConverter;
 import ee.valiit.mystuffback.persistence.item.Item;
+import ee.valiit.mystuffback.persistence.item.ItemDto;
 import ee.valiit.mystuffback.persistence.item.ItemMapper;
 import ee.valiit.mystuffback.persistence.item.ItemRepository;
 import ee.valiit.mystuffback.persistence.itemimage.Image;
 import ee.valiit.mystuffback.persistence.itemimage.ItemImageRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static ee.valiit.mystuffback.infrastructure.error.Error.ITEM_NAME_UNAVAILABLE;
+
 @Service
 @RequiredArgsConstructor
 public class ItemService {
 
+    private final UserService userService;
     @Value("${mystuff.server.address}")
     private String serverAddress;
 
@@ -31,6 +37,30 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
     private final ItemImageRepository itemImageRepository;
+
+    public void addItem(ItemDto itemDto) {
+        validateItemNameIsAvailable(itemDto.getItemName());
+        createAndAddItem(itemDto);
+    }
+
+    private Item createAndAddItem(ItemDto itemDto) {
+       Item item = createItem(itemDto);
+       itemRepository.save(item);
+       return item;
+    }
+
+    private Item createItem(ItemDto itemDto) {
+//        userService.getValidUser();
+//        Item item = itemMapper.toItem(itemDto);
+        return null;
+    }
+
+    private void validateItemNameIsAvailable(String itemName) {
+        boolean itemExists = itemRepository.itemExistsBy(itemName);
+        if (itemExists) {
+            throw new ForbiddenException(ITEM_NAME_UNAVAILABLE.getMessage(), ITEM_NAME_UNAVAILABLE.getErrorCode());
+        }
+    }
 
     public List<ItemBasicInfo> findItems(Integer userId) {
         List<Item> items = itemRepository.findActiveItemsBy(userId);
@@ -65,6 +95,8 @@ public class ItemService {
 
     public Item getValidItem(Integer itemId) {
         return itemRepository.findById(itemId)
-                .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId.toString()));
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId));
     }
+
+
 }

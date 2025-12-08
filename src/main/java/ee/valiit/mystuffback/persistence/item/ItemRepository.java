@@ -10,5 +10,8 @@ import java.util.List;
         @Query("select i from Item i  where i.user.id = :userId and i.status = 'A' order by i.date, i.name")
         List<Item> findActiveItemsBy(Integer userId);
 
+        @Query("select (count(i) > 0) from Item i where i.name = :itemName")
+        boolean itemExistsBy(String name);
+
     }
 

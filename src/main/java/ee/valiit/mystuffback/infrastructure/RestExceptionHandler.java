@@ -29,7 +29,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiError> handleDataNotFoundException(DataNotFoundException exception) {
         ApiError apiError = new ApiError();
         apiError.setMessage(exception.getMessage());
-        apiError.setErrorCode(Integer.valueOf(exception.getErrorCode()));
+        apiError.setErrorCode(exception.getErrorCode());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 

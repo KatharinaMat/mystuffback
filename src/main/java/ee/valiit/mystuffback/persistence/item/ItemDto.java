@@ -1,0 +1,35 @@
+package ee.valiit.mystuffback.persistence.item;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+
+/**
+ * DTO for {@link Item}
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ItemDto implements Serializable {
+    private Integer userId;
+
+    @NotNull
+    @Size(max = 50)
+    private String itemName;
+
+    @NotNull
+    private LocalDate itemDate;
+
+    @Size(max = 250)
+    private String model;
+
+    @Size(max = 500)
+    private String comment;
+
+    private String imageData;
+
+
+}

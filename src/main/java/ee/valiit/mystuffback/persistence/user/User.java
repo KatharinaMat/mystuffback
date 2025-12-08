@@ -37,10 +37,6 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @NotNull
-    @Column(name = "storage", nullable = false)
-    private Integer storage;
-
     @Size(max = 1)
     @NotNull
     @Column(name = "status", nullable = false, length = 1)

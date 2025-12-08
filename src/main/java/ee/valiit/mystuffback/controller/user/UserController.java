@@ -13,30 +13,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
-    @PostMapping
+
+    @PostMapping("/user")
     @Operation(summary = "New user account creation", description = "all fields are mandatory")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "403", description = "Account with this name already exists",
+            @ApiResponse(responseCode = "403", description = "Account with this name already exists (errorCode: 222)",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     public void addUser(@RequestBody @Valid UserDto userDto) {
         userService.addUser(userDto);
     }
-    @GetMapping
-    @Operation(summary = "Get user by username", description = "Returns user information")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(schema = @Schema(implementation = ApiError.class)))
-    })
-    public UserDto getUser(@RequestParam String username) {
-        return userService.getUserDto(username);
-    }
-
 
 }

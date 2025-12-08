@@ -31,4 +31,6 @@ public interface ItemMapper {
     @Mapping(constant = "", target = "imageData")
     ItemDetails toItemDetails(Item item);
 
+
+    Item toItem(ItemDto itemDto);
 }

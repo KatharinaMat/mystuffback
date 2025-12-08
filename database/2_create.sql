@@ -36,7 +36,6 @@ CREATE TABLE "user" (
                         username varchar(50)  NOT NULL,
                         password varchar(50)  NOT NULL,
                         email varchar(50)  NOT NULL,
-                        storage int  NOT NULL,
                         status varchar(1)  NOT NULL,
                         CONSTRAINT id PRIMARY KEY (id)
 );

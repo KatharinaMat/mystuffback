@@ -17,14 +17,17 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto implements Serializable {
+
     @NotNull
     @Size(message = "username must be 3-50 charactes", min = 3, max = 50)
     @NotEmpty
     private String username;
+
     @NotNull
     @Size(message = "password must be 3-50 characters", min = 3, max = 50)
     @NotEmpty
     private String password;
+
     @NotNull
     @Size(max = 50)
     @Email
