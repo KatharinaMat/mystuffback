@@ -28,6 +28,7 @@ public interface ItemMapper {
     @Mapping(source = "date", target = "itemDate")
     @Mapping(source = "model", target = "model")
     @Mapping(source = "comment", target = "comment")
+    @Mapping(constant = "", target = "imageData")
     ItemDetails toItemDetails(Item item);
 
 }
