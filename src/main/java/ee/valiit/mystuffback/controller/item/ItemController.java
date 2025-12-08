@@ -13,10 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,7 +29,7 @@ public class ItemController {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "403", description = "Item with this name already exists",
                 content = @Content(schema = @Schema(implementation = ApiError.class)))})
-    public void addItem(@RequestParam @Valid ItemDto itemDto) {
+    public void addItem(@RequestBody @Valid ItemDto itemDto) {
         itemService.addItem(itemDto);
     }
 

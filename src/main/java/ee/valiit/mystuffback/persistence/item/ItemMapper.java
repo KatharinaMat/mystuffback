@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(imports = {Status.class} , unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = "spring", imports = {Status.class})
 public interface ItemMapper {
 
 
@@ -24,16 +24,20 @@ public interface ItemMapper {
     List<ItemBasicInfo> toItemBasicInfos(List<Item> items);
 
 
-
     @Mapping(source = "id", target = "itemId")
     @Mapping(source = "name", target = "itemName")
     @Mapping(source = "date", target = "itemDate")
     @Mapping(source = "model", target = "model")
     @Mapping(source = "comment", target = "comment")
     @Mapping(constant = "", target = "imageData")
-    @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
     ItemDetails toItemDetails(Item item);
 
-
+    @Mapping(target = "id", ignore = true)      // new item, id generated
+    @Mapping(target = "user", ignore = true)    // we set it in service
+    @Mapping(source = "itemName", target= "name")
+    @Mapping(source = "itemDate", target= "date")
+    @Mapping(source = "model", target= "model")
+    @Mapping(source = "comment", target= "comment")
+    @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
     Item toItem(ItemDto itemDto);
 }

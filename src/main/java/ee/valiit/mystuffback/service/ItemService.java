@@ -25,36 +25,33 @@ import static ee.valiit.mystuffback.infrastructure.error.Error.ITEM_NAME_UNAVAIL
 @RequiredArgsConstructor
 public class ItemService {
 
+    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
+    private final ItemImageRepository itemImageRepository;
     private final UserService userService;
+
     @Value("${mystuff.server.address}")
     private String serverAddress;
 
     @Value("${mystuff.item.path}")
     private String itemPath;
 
-    private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper;
-    private final ItemImageRepository itemImageRepository;
-
     @Transactional
     public void addItem(ItemDto itemDto) {
         validateItemNameIsAvailable(itemDto.getItemName());
-        Item item = createAndAddItem(itemDto);
+        Item item = itemMapper.toItem(itemDto);
+        item.setUser(userService.getValidUser(itemDto.getUserId()));
+        itemRepository.save(item);
         handleAddItemImage(item, itemDto.getImageData());
     }
 
-    private Item createAndAddItem(ItemDto itemDto) {
-        Item item = itemMapper.toItem(itemDto);
-        itemRepository.save(item);
-        return item;
-    }
     private void handleAddItemImage(Item item, String imageData) {
         if (hasImage(imageData)) {
             createAndSaveItemImage(item, imageData);
         }
     }
     private static boolean hasImage(String imageData) {
-        return !imageData.isEmpty();
+       return imageData != null && !imageData.isBlank();
     }
 
     private void createAndSaveItemImage(Item item, String imageData) {

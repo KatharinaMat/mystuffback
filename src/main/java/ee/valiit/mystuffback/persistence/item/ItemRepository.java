@@ -11,7 +11,7 @@ import java.util.List;
         List<Item> findActiveItemsBy(Integer userId);
 
         @Query("select (count(i) > 0) from Item i where i.name = :itemName")
-        boolean itemExistsBy(String name);
+        boolean itemExistsBy(String itemName);
 
     }
 
