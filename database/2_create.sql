@@ -2,8 +2,8 @@
 -- Last modification date: 2025-11-28 09:16:31.572
 
 -- tables
--- Table: image
-CREATE TABLE image (
+-- Table: itemImage
+CREATE TABLE itemImage (
                        id serial  NOT NULL,
                        item_id int  NOT NULL,
                        image_data bytea  NOT NULL,
@@ -49,8 +49,8 @@ ALTER TABLE item ADD CONSTRAINT item_user
             INITIALLY IMMEDIATE
 ;
 
--- Reference: receipt_image_item (table: image)
-ALTER TABLE image ADD CONSTRAINT receipt_image_item
+-- Reference: receipt_image_item (table: itemImage)
+ALTER TABLE itemImage ADD CONSTRAINT receipt_image_item
     FOREIGN KEY (item_id)
         REFERENCES item (id)
         NOT DEFERRABLE

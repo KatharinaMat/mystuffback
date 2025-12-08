@@ -1,5 +1,6 @@
-package ee.valiit.mystuffback.persistence.item;
+package ee.valiit.mystuffback.controller.item.dto;
 
+import ee.valiit.mystuffback.persistence.item.Item;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;

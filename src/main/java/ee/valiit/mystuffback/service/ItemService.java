@@ -2,21 +2,19 @@ package ee.valiit.mystuffback.service;
 
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
 import ee.valiit.mystuffback.controller.item.dto.ItemDetails;
-import ee.valiit.mystuffback.infrastructure.error.Error;
-import ee.valiit.mystuffback.infrastructure.exception.DataNotFoundException;
+import ee.valiit.mystuffback.controller.item.dto.ItemDto;
 import ee.valiit.mystuffback.infrastructure.exception.ForbiddenException;
 import ee.valiit.mystuffback.infrastructure.exception.PrimaryKeyNotFoundException;
 import ee.valiit.mystuffback.infrastructure.util.BytesConverter;
 import ee.valiit.mystuffback.persistence.item.Item;
-import ee.valiit.mystuffback.persistence.item.ItemDto;
 import ee.valiit.mystuffback.persistence.item.ItemMapper;
 import ee.valiit.mystuffback.persistence.item.ItemRepository;
-import ee.valiit.mystuffback.persistence.itemimage.Image;
+import ee.valiit.mystuffback.persistence.itemimage.ItemImage;
 import ee.valiit.mystuffback.persistence.itemimage.ItemImageRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,21 +36,37 @@ public class ItemService {
     private final ItemMapper itemMapper;
     private final ItemImageRepository itemImageRepository;
 
+    @Transactional
     public void addItem(ItemDto itemDto) {
         validateItemNameIsAvailable(itemDto.getItemName());
-        createAndAddItem(itemDto);
+        Item item = createAndAddItem(itemDto);
+        handleAddItemImage(item, itemDto.getImageData());
     }
 
     private Item createAndAddItem(ItemDto itemDto) {
-       Item item = createItem(itemDto);
-       itemRepository.save(item);
-       return item;
+        Item item = itemMapper.toItem(itemDto);
+        itemRepository.save(item);
+        return item;
+    }
+    private void handleAddItemImage(Item item, String imageData) {
+        if (hasImage(imageData)) {
+            createAndSaveItemImage(item, imageData);
+        }
+    }
+    private static boolean hasImage(String imageData) {
+        return !imageData.isEmpty();
     }
 
-    private Item createItem(ItemDto itemDto) {
-//        userService.getValidUser();
-//        Item item = itemMapper.toItem(itemDto);
-        return null;
+    private void createAndSaveItemImage(Item item, String imageData) {
+        ItemImage itemImage = createItemImage(item, imageData);
+        itemImageRepository.save(itemImage);
+    }
+
+    private static ItemImage createItemImage(Item item, String imageData) {
+        ItemImage itemImage = new ItemImage();
+        itemImage.setItem(item);
+        itemImage.setImageData(BytesConverter.stringToBytes(imageData));
+        return itemImage;
     }
 
     private void validateItemNameIsAvailable(String itemName) {
@@ -77,14 +91,14 @@ public class ItemService {
     }
 
     private void handleAddImageDataToItemDetails(Integer itemId, ItemDetails itemDetails) {
-        Optional<Image> optionalItemImage = itemImageRepository.findItemImageBy(itemId);
+        Optional<ItemImage> optionalItemImage = itemImageRepository.findItemImageBy(itemId);
         if (optionalItemImage.isPresent()) {
-            Image itemImage = optionalItemImage.get();
+            ItemImage itemImage = optionalItemImage.get();
             addImageDataToItemDetails(itemImage, itemDetails);
         }
     }
 
-    private void addImageDataToItemDetails(Image itemImage, ItemDetails itemDetails) {
+    private void addImageDataToItemDetails(ItemImage itemImage, ItemDetails itemDetails) {
         byte[] itemImageData = itemImage.getImageData();
         itemDetails.setImageData(BytesConverter.bytesToString(itemImageData));
     }

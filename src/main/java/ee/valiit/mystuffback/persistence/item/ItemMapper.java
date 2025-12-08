@@ -2,6 +2,8 @@ package ee.valiit.mystuffback.persistence.item;
 
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
 import ee.valiit.mystuffback.controller.item.dto.ItemDetails;
+import ee.valiit.mystuffback.controller.item.dto.ItemDto;
+import ee.valiit.mystuffback.infrastructure.status.Status;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -9,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(imports = {Status.class} , unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ItemMapper {
 
 
@@ -29,6 +31,7 @@ public interface ItemMapper {
     @Mapping(source = "model", target = "model")
     @Mapping(source = "comment", target = "comment")
     @Mapping(constant = "", target = "imageData")
+    @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
     ItemDetails toItemDetails(Item item);
 
 

@@ -3,7 +3,6 @@ package ee.valiit.mystuffback.persistence.user;
 import ee.valiit.mystuffback.controller.login.dto.LoginResponse;
 import ee.valiit.mystuffback.controller.user.dto.UserDto;
 import ee.valiit.mystuffback.infrastructure.status.Status;
-import jakarta.validation.Valid;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

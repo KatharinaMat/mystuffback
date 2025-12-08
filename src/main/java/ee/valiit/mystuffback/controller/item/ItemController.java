@@ -4,7 +4,7 @@ package ee.valiit.mystuffback.controller.item;
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
 import ee.valiit.mystuffback.controller.item.dto.ItemDetails;
 import ee.valiit.mystuffback.infrastructure.error.ApiError;
-import ee.valiit.mystuffback.persistence.item.ItemDto;
+import ee.valiit.mystuffback.controller.item.dto.ItemDto;
 import ee.valiit.mystuffback.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
