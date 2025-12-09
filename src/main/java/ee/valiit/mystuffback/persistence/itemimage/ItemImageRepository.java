@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public interface ItemImageRepository extends JpaRepository <ItemImage, Integer>{
+public interface ItemImageRepository extends JpaRepository<ItemImage, Integer> {
     @Query("select i from ItemImage i where i.item.id = :itemId")
     Optional<ItemImage> findItemImageBy(Integer itemId);
 

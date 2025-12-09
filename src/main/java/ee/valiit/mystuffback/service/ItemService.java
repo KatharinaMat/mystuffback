@@ -2,9 +2,9 @@ package ee.valiit.mystuffback.service;
 
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
 import ee.valiit.mystuffback.controller.item.dto.ItemDto;
-import ee.valiit.mystuffback.controller.user.dto.UserDto;
 import ee.valiit.mystuffback.infrastructure.exception.ForbiddenException;
 import ee.valiit.mystuffback.infrastructure.exception.PrimaryKeyNotFoundException;
+import ee.valiit.mystuffback.infrastructure.status.Status;
 import ee.valiit.mystuffback.infrastructure.util.BytesConverter;
 import ee.valiit.mystuffback.persistence.item.Item;
 import ee.valiit.mystuffback.persistence.item.ItemMapper;
@@ -29,7 +29,6 @@ public class ItemService {
     private final ItemMapper itemMapper;
     private final ItemImageRepository itemImageRepository;
     private final UserService userService;
-    private final UserDto userDto;
 
 
     @Transactional
@@ -102,22 +101,12 @@ public class ItemService {
                 .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId));
     }
 
-    /*public void updateItem(Integer itemId, ItemDto itemDto) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Item not found with id:" + itemId));
-        item.setName(itemDto.getItemName());
-        item.setDate(itemDto.getItemDate());
-        item.setModel(itemDto.getModel());
-        item.setComment(itemDto.getComment());
-
-        itemRepository.save(item);
-    }*/
-
-    public void updateItemInfo(Integer itemId, ItemDto itemDto) {
+    public Item updateItemInfo(Integer itemId, ItemDto itemDto) {
         Item item = getValidItem(itemId);
-        itemMapper.updateItem(item, itemDto);
         updateItemImage(itemDto, item);
-
+        itemMapper.updateItem(item, itemDto);
+        itemRepository.save(item);
+        return item;
     }
 
     private void updateItemImage(ItemDto itemDto, Item item) {
@@ -125,4 +114,10 @@ public class ItemService {
         handleAddItemImage(item, itemDto.getImageData());
     }
 
+    public void removeItem(Integer itemId) {
+        Item item = getValidItem(itemId);
+        item.setStatus(Status.SOFT_DELETED.getCode());
+        itemRepository.save(item);
+    }
 }
+

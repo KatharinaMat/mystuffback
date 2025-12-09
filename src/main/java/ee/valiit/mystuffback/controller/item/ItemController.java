@@ -2,8 +2,8 @@ package ee.valiit.mystuffback.controller.item;
 
 
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
-import ee.valiit.mystuffback.infrastructure.error.ApiError;
 import ee.valiit.mystuffback.controller.item.dto.ItemDto;
+import ee.valiit.mystuffback.infrastructure.error.ApiError;
 import ee.valiit.mystuffback.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,9 +25,9 @@ public class ItemController {
     @PostMapping("/item")
     @Operation(summary = "Addition of a new item", description = "itemName and Date are mandatory fields")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "403", description = "Item with this name already exists (errorCode 333)",
-                content = @Content(schema = @Schema(implementation = ApiError.class)))})
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "403", description = "Item with this name already exists (errorCode 333)",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))})
     public void addItem(@RequestParam Integer userId, @RequestBody @Valid ItemDto itemDto) {
         itemService.addItem(userId, itemDto);
     }
@@ -45,9 +45,15 @@ public class ItemController {
     }
 
     @PutMapping("/item")
-    @Operation(summary = "changes the details of an existing item")
-    public void  updateItemInfo(@RequestParam Integer itemId, @RequestBody ItemDto itemDto) {
+    @Operation(summary = "Changes the details of an existing item")
+    public void updateItemInfo(@RequestParam Integer itemId, @RequestBody ItemDto itemDto) {
         itemService.updateItemInfo(itemId, itemDto);
+    }
+
+    @DeleteMapping("/item")
+    @Operation(summary = "Removes item from system")
+    public void removeItem(@RequestParam Integer itemId) {
+        itemService.removeItem(itemId);
     }
 }
 
