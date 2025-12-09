@@ -15,5 +15,4 @@ public class ItemBasicInfo implements Serializable {
     private Integer itemId;
     private String itemName;
     private LocalDate itemDate;
-
 }

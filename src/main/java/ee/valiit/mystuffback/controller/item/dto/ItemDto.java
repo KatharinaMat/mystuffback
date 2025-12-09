@@ -3,7 +3,9 @@ package ee.valiit.mystuffback.controller.item.dto;
 import ee.valiit.mystuffback.persistence.item.Item;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,7 +17,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto implements Serializable {
-    private Integer userId;
 
     @NotNull
     @Size(max = 50)

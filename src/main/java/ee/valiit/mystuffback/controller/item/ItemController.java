@@ -2,7 +2,6 @@ package ee.valiit.mystuffback.controller.item;
 
 
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
-import ee.valiit.mystuffback.controller.item.dto.ItemDetails;
 import ee.valiit.mystuffback.infrastructure.error.ApiError;
 import ee.valiit.mystuffback.controller.item.dto.ItemDto;
 import ee.valiit.mystuffback.service.ItemService;
@@ -27,10 +26,10 @@ public class ItemController {
     @Operation(summary = "Addition of a new item", description = "itemName and Date are mandatory fields")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "403", description = "Item with this name already exists",
+        @ApiResponse(responseCode = "403", description = "Item with this name already exists (errorCode 333)",
                 content = @Content(schema = @Schema(implementation = ApiError.class)))})
-    public void addItem(@RequestBody @Valid ItemDto itemDto) {
-        itemService.addItem(itemDto);
+    public void addItem(@RequestParam Integer userId, @RequestBody @Valid ItemDto itemDto) {
+        itemService.addItem(userId, itemDto);
     }
 
     @GetMapping("/items")
@@ -41,8 +40,8 @@ public class ItemController {
 
     @GetMapping("/item")
     @Operation(summary = "Returns all details of a chosen item")
-    public ItemDetails findItemDetails(@RequestParam Integer itemId) {
-        return itemService.findItemDetails(itemId);
+    public ItemDto findItem(@RequestParam Integer itemId) {
+        return itemService.findItem(itemId);
     }
 
 }

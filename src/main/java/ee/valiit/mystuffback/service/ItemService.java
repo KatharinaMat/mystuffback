@@ -1,7 +1,6 @@
 package ee.valiit.mystuffback.service;
 
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
-import ee.valiit.mystuffback.controller.item.dto.ItemDetails;
 import ee.valiit.mystuffback.controller.item.dto.ItemDto;
 import ee.valiit.mystuffback.infrastructure.exception.ForbiddenException;
 import ee.valiit.mystuffback.infrastructure.exception.PrimaryKeyNotFoundException;
@@ -11,8 +10,8 @@ import ee.valiit.mystuffback.persistence.item.ItemMapper;
 import ee.valiit.mystuffback.persistence.item.ItemRepository;
 import ee.valiit.mystuffback.persistence.itemimage.ItemImage;
 import ee.valiit.mystuffback.persistence.itemimage.ItemImageRepository;
+import ee.valiit.mystuffback.persistence.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,17 +29,13 @@ public class ItemService {
     private final ItemImageRepository itemImageRepository;
     private final UserService userService;
 
-    @Value("${mystuff.server.address}")
-    private String serverAddress;
-
-    @Value("${mystuff.item.path}")
-    private String itemPath;
 
     @Transactional
-    public void addItem(ItemDto itemDto) {
+    public void addItem(Integer userId, ItemDto itemDto) {
         validateItemNameIsAvailable(itemDto.getItemName());
+        User user = userService.getValidUser(userId);
         Item item = itemMapper.toItem(itemDto);
-        item.setUser(userService.getValidUser(itemDto.getUserId()));
+        item.setUser(user);
         itemRepository.save(item);
         handleAddItemImage(item, itemDto.getImageData());
     }
@@ -50,8 +45,9 @@ public class ItemService {
             createAndSaveItemImage(item, imageData);
         }
     }
+
     private static boolean hasImage(String imageData) {
-       return imageData != null && !imageData.isBlank();
+        return imageData != null && !imageData.isBlank();
     }
 
     private void createAndSaveItemImage(Item item, String imageData) {
@@ -78,31 +74,26 @@ public class ItemService {
         return itemMapper.toItemBasicInfos(items);
     }
 
-    public ItemDetails findItemDetails(Integer itemId) {
+    public ItemDto findItem(Integer itemId) {
         Item item = getValidItem(itemId);
-        ItemDetails itemDetails = itemMapper.toItemDetails(item);
-        itemDetails.setImageQrLink(constructImageQrLink(itemId));
-        handleAddImageDataToItemDetails(itemId, itemDetails);
-        // todo> imageData ja imageQR mappimata
-        return itemDetails;
+        ItemDto itemDto = itemMapper.toItemDto(item);
+        handleAddImageDataToItemDto(itemId, itemDto);
+        return itemDto;
     }
 
-    private void handleAddImageDataToItemDetails(Integer itemId, ItemDetails itemDetails) {
+    private void handleAddImageDataToItemDto(Integer itemId, ItemDto itemDto) {
         Optional<ItemImage> optionalItemImage = itemImageRepository.findItemImageBy(itemId);
         if (optionalItemImage.isPresent()) {
             ItemImage itemImage = optionalItemImage.get();
-            addImageDataToItemDetails(itemImage, itemDetails);
+            addImageDataToItemDto(itemImage, itemDto);
         }
     }
 
-    private void addImageDataToItemDetails(ItemImage itemImage, ItemDetails itemDetails) {
+    private void addImageDataToItemDto(ItemImage itemImage, ItemDto itemDto) {
         byte[] itemImageData = itemImage.getImageData();
-        itemDetails.setImageData(BytesConverter.bytesToString(itemImageData));
+        itemDto.setImageData(BytesConverter.bytesToString(itemImageData));
     }
 
-    private String constructImageQrLink(Integer itemId) {
-        return serverAddress + itemPath + itemId;
-    }
 
     public Item getValidItem(Integer itemId) {
         return itemRepository.findById(itemId)
