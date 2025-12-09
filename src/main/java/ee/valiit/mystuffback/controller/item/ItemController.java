@@ -44,5 +44,10 @@ public class ItemController {
         return itemService.findItem(itemId);
     }
 
+    @PutMapping("/item")
+    @Operation(summary = "changes the details of an existing item")
+    public void  updateItemInfo(@RequestParam Integer itemId, @RequestBody ItemDto itemDto) {
+        itemService.updateItemInfo(itemId, itemDto);
+    }
 }
 

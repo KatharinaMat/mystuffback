@@ -2,6 +2,7 @@ package ee.valiit.mystuffback.service;
 
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
 import ee.valiit.mystuffback.controller.item.dto.ItemDto;
+import ee.valiit.mystuffback.controller.user.dto.UserDto;
 import ee.valiit.mystuffback.infrastructure.exception.ForbiddenException;
 import ee.valiit.mystuffback.infrastructure.exception.PrimaryKeyNotFoundException;
 import ee.valiit.mystuffback.infrastructure.util.BytesConverter;
@@ -28,6 +29,7 @@ public class ItemService {
     private final ItemMapper itemMapper;
     private final ItemImageRepository itemImageRepository;
     private final UserService userService;
+    private final UserDto userDto;
 
 
     @Transactional
@@ -100,5 +102,27 @@ public class ItemService {
                 .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId));
     }
 
+    /*public void updateItem(Integer itemId, ItemDto itemDto) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found with id:" + itemId));
+        item.setName(itemDto.getItemName());
+        item.setDate(itemDto.getItemDate());
+        item.setModel(itemDto.getModel());
+        item.setComment(itemDto.getComment());
+
+        itemRepository.save(item);
+    }*/
+
+    public void updateItemInfo(Integer itemId, ItemDto itemDto) {
+        Item item = getValidItem(itemId);
+        itemMapper.updateItem(item, itemDto);
+        updateItemImage(itemDto, item);
+
+    }
+
+    private void updateItemImage(ItemDto itemDto, Item item) {
+        itemImageRepository.deleteItemImagesBy(item);
+        handleAddItemImage(item, itemDto.getImageData());
+    }
 
 }

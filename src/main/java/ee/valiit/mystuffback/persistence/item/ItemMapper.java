@@ -3,8 +3,7 @@ package ee.valiit.mystuffback.persistence.item;
 import ee.valiit.mystuffback.controller.item.dto.ItemBasicInfo;
 import ee.valiit.mystuffback.controller.item.dto.ItemDto;
 import ee.valiit.mystuffback.infrastructure.status.Status;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -36,4 +35,9 @@ public interface ItemMapper {
     @Mapping(source = "comment", target= "comment")
     @Mapping(expression = "java(Status.ACTIVE.getCode())", target = "status")
     Item toItem(ItemDto itemDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @InheritConfiguration(name = "toItem")
+    @Mapping(ignore = true, target = "status")
+    Item updateItem(@MappingTarget Item item, ItemDto itemDto);
 }
