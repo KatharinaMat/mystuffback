@@ -22,8 +22,8 @@ public class LoginController {
     @GetMapping("/login")
     @Operation(summary = "Logging in. Returns userId and roleName",
             description = """
-                       The system searches for a user using username and password, whose account is also active.
-                       If no match is found, an error with errorCode 111 is thrown.""")
+                    The system searches for a user using username and password, whose account is also active.
+                    If no match is found, an error with errorCode 111 is thrown.""")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "403", description = "Username or password incorrect", content = @Content(schema = @Schema(implementation = ApiError.class)))})

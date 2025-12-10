@@ -14,7 +14,7 @@ public class QrCodeController {
 
     @GetMapping("/qr-code")
     public String getQrCode(Integer itemId) {
-       return qrCodeService.getQrCode(itemId);
+        return qrCodeService.getQrCode(itemId);
     }
 
 }

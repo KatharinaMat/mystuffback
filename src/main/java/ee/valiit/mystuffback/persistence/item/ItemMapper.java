@@ -28,8 +28,8 @@ public interface ItemMapper {
     @Mapping(target = "imageId", ignore = true)
     ItemDto toItemDto(Item item);
 
-    @Mapping(target = "id", ignore = true)      // new item, id generated
-    @Mapping(target = "user", ignore = true)    // we set it in service
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
     @Mapping(source = "itemName", target = "name")
     @Mapping(source = "itemDate", target = "date")
     @Mapping(source = "model", target = "model")

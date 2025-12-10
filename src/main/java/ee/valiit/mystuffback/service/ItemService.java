@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,26 +41,29 @@ public class ItemService {
         handleAddItemImage(item, itemDto.getImageData());
     }
 
-    private void handleAddItemImage(Item item, String imageData) {
-        if (hasImage(imageData)) {
-            createAndSaveItemImage(item, imageData);
-        }
+    public ItemDto findItem(Integer itemId) {
+        Item item = getValidItem(itemId);
+        ItemDto itemDto = itemMapper.toItemDto(item);
+        handleAddImageDataToItemDto(itemId, itemDto);
+        return itemDto;
     }
 
-    private static boolean hasImage(String imageData) {
-        return imageData != null && !imageData.isBlank();
+    public List<ItemBasicInfo> findItems(Integer userId) {
+        List<Item> items = itemRepository.findActiveItemsBy(userId);
+        return itemMapper.toItemBasicInfos(items);
     }
 
-    private void createAndSaveItemImage(Item item, String imageData) {
-        ItemImage itemImage = createItemImage(item, imageData);
-        itemImageRepository.save(itemImage);
+    public Item updateItemInfo(Integer itemId, ItemDto itemDto) {
+        Item item = getValidItem(itemId);
+        updateItemImage(itemDto, item);
+        itemMapper.updateItem(item, itemDto);
+        itemRepository.save(item);
+        return item;
     }
 
-    private static ItemImage createItemImage(Item item, String imageData) {
-        ItemImage itemImage = new ItemImage();
-        itemImage.setItem(item);
-        itemImage.setImageData(BytesConverter.stringToBytes(imageData));
-        return itemImage;
+    public Item getValidItem(Integer itemId) {
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId));
     }
 
     private void validateItemNameIsAvailable(String itemName) {
@@ -71,16 +73,23 @@ public class ItemService {
         }
     }
 
-    public List<ItemBasicInfo> findItems(Integer userId) {
-        List<Item> items = itemRepository.findActiveItemsBy(userId);
-        return itemMapper.toItemBasicInfos(items);
+    private static ItemImage createItemImage(Item item, String imageData) {
+        ItemImage itemImage = new ItemImage();
+        itemImage.setItem(item);
+        itemImage.setImageData(BytesConverter.stringToBytes(imageData));
+        return itemImage;
     }
 
-    public ItemDto findItem(Integer itemId) {
-        Item item = getValidItem(itemId);
-        ItemDto itemDto = itemMapper.toItemDto(item);
-        handleAddImageDataToItemDto(itemId, itemDto);
-        return itemDto;
+    private void addImageDataToItemDto(ItemImage itemImage, ItemDto itemDto) {
+        byte[] itemImageData = itemImage.getImageData();
+        itemDto.setImageData(BytesConverter.bytesToString(itemImageData));
+        itemDto.setImageId(itemImage.getId());
+    }
+
+    private void handleAddItemImage(Item item, String imageData) {
+        if (hasImage(imageData)) {
+            createAndSaveItemImage(item, imageData);
+        }
     }
 
     private void handleAddImageDataToItemDto(Integer itemId, ItemDto itemDto) {
@@ -91,24 +100,13 @@ public class ItemService {
         }
     }
 
-    private void addImageDataToItemDto(ItemImage itemImage, ItemDto itemDto) {
-        byte[] itemImageData = itemImage.getImageData();
-        itemDto.setImageData(BytesConverter.bytesToString(itemImageData));
-        itemDto.setImageId(itemImage.getId());
+    private static boolean hasImage(String imageData) {
+        return imageData != null && !imageData.isBlank();
     }
 
-
-    public Item getValidItem(Integer itemId) {
-        return itemRepository.findById(itemId)
-                .orElseThrow(() -> new PrimaryKeyNotFoundException("itemId", itemId));
-    }
-
-    public Item updateItemInfo(Integer itemId, ItemDto itemDto) {
-        Item item = getValidItem(itemId);
-        updateItemImage(itemDto, item);
-        itemMapper.updateItem(item, itemDto);
-        itemRepository.save(item);
-        return item;
+    private void createAndSaveItemImage(Item item, String imageData) {
+        ItemImage itemImage = createItemImage(item, imageData);
+        itemImageRepository.save(itemImage);
     }
 
     private void updateItemImage(ItemDto itemDto, Item item) {
@@ -125,12 +123,13 @@ public class ItemService {
 
     public void removeItemImage(Integer itemId, Integer imageId) {
         Item item = getValidItem(itemId);
-        ItemImage image =itemImageRepository.findById(imageId)
+        ItemImage image = itemImageRepository.findById(imageId)
                 .orElseThrow(() -> new PrimaryKeyNotFoundException("imageId", imageId));
         if (!image.getItem().getId().equals(itemId)) {
             throw new IllegalArgumentException("Image does not belong to this item");
         }
         itemImageRepository.deleteById(imageId);
     }
+
 }
 
