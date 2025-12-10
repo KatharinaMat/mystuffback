@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: mystuff-backend
-    env: java
-    region: virginia
-    buildCommand: "./gradlew build"
-    startCommand: "java -jar build/libs/mystuffback-0.0.1-SNAPSHOT.jar"
-    plan: free
-    autodeploy: true
