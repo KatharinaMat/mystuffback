@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,6 +55,14 @@ public class ItemController {
     @Operation(summary = "Removes item from system")
     public void removeItem(@RequestParam Integer itemId) {
         itemService.removeItem(itemId);
+    }
+
+    @DeleteMapping("/{itemId}/images/{imageId}")
+    public ResponseEntity<Void> removeItemImage(
+            @PathVariable Integer itemId,
+            @PathVariable Integer imageId) {
+        itemService.removeItemImage(itemId, imageId);
+        return ResponseEntity.noContent().build();
     }
 }
 

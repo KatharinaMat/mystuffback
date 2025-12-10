@@ -4,6 +4,7 @@ import ee.valiit.mystuffback.persistence.item.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -14,6 +15,6 @@ public interface ItemImageRepository extends JpaRepository<ItemImage, Integer> {
 
     @Transactional
     @Modifying
-    @Query("delete from ItemImage  i where i.item = :item")
-    int deleteItemImagesBy(Item item);
+    @Query("delete from ItemImage i where i.item = :item")
+    int deleteItemImagesBy(@Param("item") Item item);
 }

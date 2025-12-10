@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,8 +117,19 @@ public class ItemService {
 
     public void removeItem(Integer itemId) {
         Item item = getValidItem(itemId);
+        itemImageRepository.deleteItemImagesBy(item);
         item.setStatus(Status.SOFT_DELETED.getCode());
         itemRepository.save(item);
+    }
+
+    public void removeItemImage(Integer itemId, Integer imageId) {
+        Item item = getValidItem(itemId);
+        ItemImage image =itemImageRepository.findById(imageId)
+                .orElseThrow(() -> new PrimaryKeyNotFoundException("imageId", imageId));
+        if (!image.getItem().getId().equals(itemId)) {
+            throw new IllegalArgumentException("Image does not belong to this item");
+        }
+        itemImageRepository.deleteById(imageId);
     }
 }
 
