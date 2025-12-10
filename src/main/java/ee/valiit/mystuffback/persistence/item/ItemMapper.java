@@ -25,6 +25,7 @@ public interface ItemMapper {
     @Mapping(source = "model", target = "model")
     @Mapping(source = "comment", target = "comment")
     @Mapping(constant = "", target = "imageData")
+    @Mapping(target = "imageId", ignore = true)
     ItemDto toItemDto(Item item);
 
     @Mapping(target = "id", ignore = true)      // new item, id generated

@@ -33,5 +33,7 @@ public class ItemDto implements Serializable {
 
     private String imageData;
 
+    private Integer imageId;
+
 
 }

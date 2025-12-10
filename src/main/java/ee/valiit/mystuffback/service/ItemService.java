@@ -94,6 +94,7 @@ public class ItemService {
     private void addImageDataToItemDto(ItemImage itemImage, ItemDto itemDto) {
         byte[] itemImageData = itemImage.getImageData();
         itemDto.setImageData(BytesConverter.bytesToString(itemImageData));
+        itemDto.setImageId(itemImage.getId());
     }
 
 
